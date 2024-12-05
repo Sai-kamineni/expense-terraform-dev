@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     bucket = "81s-multi-env-dev"
-    key    = "expense"
+    key    = "expense-vpc"
     region = "us-east-1"
     dynamodb_table = "81s-locking-dev"
   }
