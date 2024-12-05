@@ -1,5 +1,18 @@
-locals {
-    resource_name = "${var.project_name}-${var.environment}-bastion"
-    bastion_sg_id = data.aws_ssm_parameter.bastion_sg_id.value
-    public_subnet_id = split(",", data.aws_ssm_parameter.public_subnet_ids.value)[0]
+module "bastion" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+  
+  ami = data.aws_ami.joindevops.id
+  name = local.resource_name
+
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [local.bastion_sg_id]
+  subnet_id              = local.public_subnet_id
+
+  tags = merge(
+    var.common_tags,
+    var.bastion_tags,
+    {
+        Name = local.resource_name
+    }
+  )
 }
